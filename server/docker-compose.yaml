@@ -1,0 +1,45 @@
+# This is a temporary development configuration for the sc-blog application. 
+# It is left in the repository in order to provide documentation on our 
+# development process.
+# The final application is not deployed using docker-compose but via
+# a Kubernetes service.
+# Since we developed a custom application for this course,
+# this method was chosen for its simplicity as we were able to declare
+# both the flask and database services alongside the data volume in a 
+# single file very concisely.
+
+version: "3.9"
+
+services:
+  postgres_service:
+    image: postgres:13.3 # newer versions of postgresql will break the code
+    container_name: postgres_container
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+
+  flask_service:
+    build:
+      context: .
+    container_name: flask_container
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/usr/local/src/server
+    environment:
+      - ENV=${ENV}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+    depends_on:
+      - postgres_service
+
+volumes:
+  postgres_data:
+    driver: local

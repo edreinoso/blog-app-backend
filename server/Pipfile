@@ -1,0 +1,28 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+flake8 = "*"
+autopep8 = "*"
+mypy = "*"
+
+[packages]
+flask = "*"
+flask-cors = "*"
+sqlalchemy = "*"
+python-dotenv = "*"
+jsonschema = "*"
+flask-login = "*"
+bcrypt = "*"
+psycopg2-binary = "*"
+typing-extensions = "*"
+
+[requires]
+python_version = "3.9"
+
+[scripts]
+local = "flask run"
+dev = "docker-compose up --remove-orphans flask_service"
+dev-build = "docker-compose up --build --remove-orphans flask_service"

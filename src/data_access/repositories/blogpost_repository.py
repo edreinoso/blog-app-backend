@@ -47,9 +47,6 @@ class SQLAlchemyBlogPostRepository (
         with Session(self.engine) as session:
             records: List[BlogPostModel] = session.query(BlogPostModel).all()
             return [make_blogpost(model_to_dict(record)) for record in records]
-            """records = session.query(BlogPostModel).all()
-            print(records)
-            return [make_blogpost(model_to_dict(record) for record in records)]"""
 
     def paginate(self, cursor: int, limit: int) -> list[BlogPost]:
         with Session(self.engine) as session:

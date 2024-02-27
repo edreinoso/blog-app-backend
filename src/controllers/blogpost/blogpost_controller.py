@@ -33,9 +33,15 @@ def post(req: HTTPAuthenticatedRequest) -> HTTPResponse:
     return HTTPResponse(status=201, body=asdict(blogpost))
 
 def get_all_blogs(req:HTTPRequest) -> HTTPResponse:
-    blogposts = retrieve_all_blogposts()
+    blogposts, users = retrieve_all_blogposts()
 
-    return HTTPResponse(status=200, body=blogposts)
+    return HTTPResponse(
+        status=201, 
+        body={
+            'blogposts': [asdict(blogpost) for blogpost in blogposts],
+            'users': [asdict(user) for user in users]
+        }
+    )
 
 
 def get_blog(req: HTTPRequest) -> HTTPResponse:

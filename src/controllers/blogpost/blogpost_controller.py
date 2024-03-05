@@ -25,15 +25,19 @@ def post_paginate(req: HTTPRequest) -> HTTPResponse:
         })
 
 
-def post(req: HTTPAuthenticatedRequest) -> HTTPResponse:
+def post(req: HTTPRequest) -> HTTPResponse:
     validate_schema(req.body, post_schema)
 
-    blogpost = add_blogpost(req.user.id, req.body)
+    print('DEBUGGING: controller/post', req.headers['Userid'])
+
+    blogpost = add_blogpost(req.headers['Userid'], req.body)
 
     return HTTPResponse(status=201, body=asdict(blogpost))
 
-def get_all_blogs(req:HTTPRequest) -> HTTPResponse:
+def get_all_blogs(req: HTTPRequest) -> HTTPResponse:
     blogposts, users = retrieve_all_blogposts()
+
+    print('DEBUGGING: controller/get_all_blogs', req)
 
     return HTTPResponse(
         status=201, 
@@ -53,7 +57,7 @@ def get_blog(req: HTTPRequest) -> HTTPResponse:
     return HTTPResponse(status=200, body=asdict(blogpost))
 
 
-def put_blog(req: HTTPAuthenticatedRequest) -> HTTPResponse:
+def put_blog(req: HTTPRequest) -> HTTPResponse:
     if 'id' not in req.args:
         raise ValidationError("You must specify a blog post id.")
 
@@ -64,7 +68,7 @@ def put_blog(req: HTTPAuthenticatedRequest) -> HTTPResponse:
     return HTTPResponse(status=200, body=asdict(blogpost))
 
 
-def delete_blog(req: HTTPAuthenticatedRequest) -> HTTPResponse:
+def delete_blog(req: HTTPRequest) -> HTTPResponse:
     if 'id' not in req.args:
         raise ValidationError("You must specify a blog post id.")
 

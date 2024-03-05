@@ -28,11 +28,18 @@ def parse_flask_request() -> HTTPRequest:
         "args": {**flask_req.args, **flask_req.view_args, **flask_req.form},
         "headers": dict(flask_req.headers)
     }
-
+    
+    print('DEBUGGING/utils: ',current_user, current_user.is_authenticated)
+    
     return (
-        HTTPAuthenticatedRequest(**req_data, user=flask_to_internal_user())
-        if current_user is not None and current_user.is_authenticated
-        else HTTPRequest(**req_data))
+        HTTPRequest(**req_data)
+
+        # Commenting until there is a way of fixing this issue with react
+        # HTTPAuthenticatedRequest(**req_data, user=flask_to_internal_user())
+        # if current_user is not None and current_user.is_authenticated
+        # else HTTPRequest(**req_data)
+        
+        )
 
 
 def run_flask_controller(

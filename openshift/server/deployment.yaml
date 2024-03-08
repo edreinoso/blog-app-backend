@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blog-server
+  template:
+    metadata:
+      labels:
+        app: blog-server
+    spec:
+      containers:
+        - name: blog-server-container
+          image: edreinoso23/blog-backend-flask_service:coreos
+          resources:
+            limits:
+              cpu: 2
+              memory: 2Gi
+          ports:
+            - containerPort: 5000
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: POSTGRES_DB
+            - name: POSTGRES_HOST
+              value: blog-database-service
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: SESSION_SECRET
+            - name: SESSION_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: blog-server-configmap
+                  key: SESSION_TYPE

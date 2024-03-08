@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blog-server-configmap
+data:
+  SESSION_TYPE: sqlalchemy
